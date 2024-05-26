@@ -60,7 +60,7 @@ def predict_breast_cancer(view: str = Form(...), image_file: UploadFile = File(.
         local_file.write(image_file.file.read())
 
     bash_result, err_out = run_bash_script(
-        "run_single.sh" if ~with_heatmap else "run_single_with_heatmap.sh",
+        "run_single.sh" if not with_heatmap else "run_single_with_heatmap.sh",
         local_file.name,
         view,
         out_dir_path
