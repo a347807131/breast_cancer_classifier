@@ -11,4 +11,4 @@ pillow==6.2.2
 
 python-multipart
 uvicorn[standard]
-#fastapi
+fastapi
