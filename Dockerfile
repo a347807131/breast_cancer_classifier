@@ -6,8 +6,11 @@ EXPOSE 5000
 COPY requirements.txt /app
 
 RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple \
-    && pip install --upgrade pip \
-    && pip3 install -r requirements.txt
+    && pip install --upgrade pip 
+
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+RUN pip install -r requirements.txt
 
 COPY . /app
 
