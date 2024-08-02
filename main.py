@@ -4,7 +4,7 @@ import os
 import subprocess
 import tempfile
 import uuid
-from typing import Union, Optional, Any
+from typing import Union, Optional, Any, List
 
 import uvicorn
 from fastapi import FastAPI, UploadFile, File, Form
@@ -73,6 +73,28 @@ def predict_breast_cancer(view: str = Form(...), image_file: UploadFile = File(.
     data = json.loads(out_json_str)
     return JSONResponse(content=ResponseModel(message="Success", data=data).dict())
 
+@app.post("/api/predict/breast_cancer_4")
+def predict_breast_cancer4(view: str = Form(...), image_files: List[UploadFile] = File()):
+    logger.info(f"Received image file to do breast cancer. : {image_files}")
+    #写入文件
+    temp_dir = tempfile.TemporaryDirectory()
+    for image_file in image_files:
+        with open(f"{temp_dir.name}/{image_file.filename}", "wb") as local_file:
+            local_file.write(image_file.file.read())
+    out_dir_path = temp_dir.name
+    temp_out_csv_file=tempfile.TemporaryFile(prefix=".csv")
+    out_dir_path.join("out.csv")
+    run_bash_script(
+        "run_without_heatmap.sh",
+        out_dir_path,#images
+        temp_out_csv_file
+    )
+
+    with open(temp_out_csv_file.name, 'r') as file:
+        lines = file.readlines()
+        for line in lines:
+            print(line)
+    return JSONResponse(content=ResponseModel(message="Success", data=0).dict())
 
 
 if __name__ == '__main__':
