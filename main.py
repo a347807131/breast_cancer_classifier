@@ -1,3 +1,4 @@
+import csv
 import json
 import logging
 import os
@@ -49,8 +50,10 @@ class ResponseModel(BaseModel):
 def read_root():
     return {"Hello": "World"}
 
+
 @app.post("/api/predict/breast_cancer")
-def predict_breast_cancer(view: str = Form(...), image_file: UploadFile = File(...), with_heatmap: bool = Form(default= False)):
+def predict_breast_cancer(view: str = Form(...), image_file: UploadFile = File(...),
+                          with_heatmap: bool = Form(default=False)):
     logger.info(f"Received image file to do breast cancer. : {image_file.filename}")
     # 写入文件
     temp_dir = tempfile.TemporaryDirectory()
@@ -73,28 +76,26 @@ def predict_breast_cancer(view: str = Form(...), image_file: UploadFile = File(.
     data = json.loads(out_json_str)
     return JSONResponse(content=ResponseModel(message="Success", data=data).dict())
 
+
 @app.post("/api/predict/breast_cancer_4")
-def predict_breast_cancer4(view: str = Form(...), image_files: List[UploadFile] = File()):
-    logger.info(f"Received image file to do breast cancer. : {image_files}")
+def predict_breast_cancer4(image_files: List[UploadFile] = File()):
+    logger.info(f"Received image file to do breast cancer 4. : {image_files}")
     #写入文件
     temp_dir = tempfile.TemporaryDirectory()
     for image_file in image_files:
         with open(f"{temp_dir.name}/{image_file.filename}", "wb") as local_file:
             local_file.write(image_file.file.read())
     out_dir_path = temp_dir.name
-    temp_out_csv_file=tempfile.TemporaryFile(prefix=".csv")
-    out_dir_path.join("out.csv")
+    out_file_path = f"{out_dir_path}/out.csv"
     run_bash_script(
         "run_without_heatmap.sh",
-        out_dir_path,#images
-        temp_out_csv_file
+        out_dir_path,  #images
+        out_file_path
     )
-
-    with open(temp_out_csv_file.name, 'r') as file:
-        lines = file.readlines()
-        for line in lines:
-            print(line)
-    return JSONResponse(content=ResponseModel(message="Success", data=0).dict())
+    with open(out_file_path, encoding='utf-8') as csv_file:
+        out_string = csv_file.read()
+    temp_dir.cleanup()
+    return JSONResponse(content=ResponseModel(message="Success", data=out_string).dict())
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NUM_PROCESSES=10
-DEVICE_TYPE='gpu'
+DEVICE_TYPE='cpu'
 NUM_EPOCHS=10
 HEATMAP_BATCH_SIZE=100
 GPU_NUMBER=0
@@ -12,12 +12,12 @@ PATCH_MODEL_PATH='models/sample_patch_model.p'
 IMAGE_MODEL_PATH='models/sample_image_model.p'
 IMAGEHEATMAPS_MODEL_PATH='models/sample_imageheatmaps_model.p'
 
-CROPPED_IMAGE_PATH='sample_output/cropped_images'
-CROPPED_EXAM_LIST_PATH='sample_output/cropped_images/cropped_exam_list.pkl'
-EXAM_LIST_PATH='sample_output/data.pkl'
-HEATMAPS_PATH='sample_output/heatmaps'
+CROPPED_IMAGE_PATH='${DATA_FOLDER}/sample_output/cropped_images'
+CROPPED_EXAM_LIST_PATH='${DATA_FOLDER}/sample_output/cropped_images/cropped_exam_list.pkl'
+EXAM_LIST_PATH='${DATA_FOLDER}/sample_output/data.pkl'
+HEATMAPS_PATH='${DATA_FOLDER}/sample_output/heatmaps'
 IMAGE_PREDICTIONS_PATH=$2
-IMAGEHEATMAPS_PREDICTIONS_PATH='sample_output/imageheatmaps_predictions.csv'
+IMAGEHEATMAPS_PREDICTIONS_PATH='${DATA_FOLDER}/sample_output/imageheatmaps_predictions.csv'
 export PYTHONPATH=$(pwd):$PYTHONPATH
 
 echo 'Stage 1: Crop Mammograms'
