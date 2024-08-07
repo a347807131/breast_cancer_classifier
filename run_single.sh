@@ -12,6 +12,10 @@ IMAGEHEATMAPS_MODEL_PATH='models/ImageHeatmaps__ModeImage_weights.p'
 SAMPLE_SINGLE_OUTPUT_PATH=$3
 export PYTHONPATH=$(pwd):$PYTHONPATH
 
+if [ $ENABLE_GPU ]; then
+    DEVICE_TYPE='gpu'
+fi
+
 
 echo 'Stage 1: Crop Mammograms'
 python3 src/cropping/crop_single.py \

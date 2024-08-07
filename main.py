@@ -78,7 +78,10 @@ def predict_breast_cancer(view: str = Form(...), image_file: UploadFile = File(.
 
 
 @app.post("/api/predict/breast_cancer_4")
-def predict_breast_cancer4(image_files: List[UploadFile] = File()):
+def predict_breast_cancer4(
+        image_files: List[UploadFile] = File(),
+        with_heatmap: bool = Form(default=False),
+    ):
     logger.info(f"Received image file to do breast cancer 4. : {image_files}")
     #写入文件
     temp_dir = tempfile.TemporaryDirectory()
@@ -88,7 +91,7 @@ def predict_breast_cancer4(image_files: List[UploadFile] = File()):
     out_dir_path = temp_dir.name
     out_file_path = f"{out_dir_path}/out.csv"
     run_bash_script(
-        "run_without_heatmap.sh",
+        "run_without_heatmap.sh" if not with_heatmap else "run.sh",
         out_dir_path,  #images
         out_file_path
     )

@@ -20,6 +20,10 @@ IMAGE_PREDICTIONS_PATH=$2
 IMAGEHEATMAPS_PREDICTIONS_PATH='${DATA_FOLDER}/sample_output/imageheatmaps_predictions.csv'
 export PYTHONPATH=$(pwd):$PYTHONPATH
 
+if [ $ENABLE_GPU ]; then
+    DEVICE_TYPE='gpu'
+fi
+
 echo 'Stage 1: Crop Mammograms'
 python3 src/cropping/crop_mammogram.py \
     --input-data-folder $DATA_FOLDER \
